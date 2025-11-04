@@ -22,18 +22,19 @@ const ServiceStackScroll = () => {
   useEffect(() => {
     if (typeof window === "undefined" || window.innerWidth < 1024) return;
 
-    const cards = cardRefs.current;
+    const cards = cardRefs.current.filter(Boolean);
+    if (!cards.length) return;
 
-    // Initial setup: all cards below viewport
-    gsap.set(cards, { yPercent: 100, scale: 1 });
-    gsap.set(cards[0], { yPercent: 0, scale: 1 });
+    gsap.set(cards, { y: "100%", scale: 1, transformOrigin: "center center" });
+    gsap.set(cards[0], { y: "0%" });
+    cards.forEach((c) => (c.style.willChange = "transform"));
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${cards.length * 100}%`,
-        scrub: 1,
+        end: `+=${cards.length * window.innerHeight}`,
+        scrub: true,
         pin: true,
         anticipatePin: 1,
       },
@@ -43,47 +44,43 @@ const ServiceStackScroll = () => {
       if (i === 0) return;
       const prev = cards[i - 1];
 
-      // Bring current card to top
-      tl.set(card, { zIndex: cards.length + i });
-
-      // Immediately shrink previous card as next card starts
       tl.to(
         prev,
         {
-          scale: 0.8, // shrink previous card
-          duration: 1,
-          ease: "power3.inOut",
+          scale: 0.53,
+          y: 80,
+          borderRadius: "38px",
+          ease: "none",
         },
-        "+=0"
+        i - 0.2
       );
 
-      // Slide next card from bottom on top
       tl.to(
         card,
         {
-          yPercent: 0,
+          y: 0,
           scale: 1,
-          duration: 1,
-          ease: "power3.out",
+          ease: "none",
         },
-        "<" // start at the same time as previous card shrinking
+        i - 0.2
       );
     });
 
-    return () => ScrollTrigger.getAll().forEach((st) => st.kill());
+    return () => {
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+      tl.kill();
+    };
   }, []);
 
   const Card = ({ bg, title, desc, tags }, index) => (
     <div
       ref={(el) => (cardRefs.current[index] = el)}
-      className="stack-card absolute inset-0 rounded-2xl p-6 lg:p-14 shadow-2xl h-full flex items-center justify-center"
+      className="stack-card absolute inset-0 rounded-2xl p-6 lg:p-14 shadow-2xl min-h-screen flex items-center justify-center"
       style={{ backgroundColor: bg }}
     >
       <div className="flex flex-col lg:flex-row justify-between gap-4 lg:gap-8 w-full">
         <div className="flex-1">
-          <h2 className="text-3xl lg:text-5xl font-bold text-[#1E1E1E] leading-tight">
-            {title}
-          </h2>
+          <h2 className="text-3xl lg:text-5xl font-bold text-[#1E1E1E] leading-tight">{title}</h2>
           {desc && <p className="mt-4 max-w-xl text-[#1E1E1E] font-medium">{desc}</p>}
           {tags && (
             <div className="lg:my-16 my-2 flex flex-wrap gap-3">
@@ -101,7 +98,7 @@ const ServiceStackScroll = () => {
   );
 
   return (
-    <div ref={containerRef} className="relative h-[90vh] lg:h-[80vh] mt-16 md:mt-0 overflow-hidden">
+    <div ref={containerRef} className="relative h-[100vh] lg:h-[100vh] mt-16 md:mt-0 overflow-hidden">
       {stack.map((item, i) => Card(item, i))}
     </div>
   );
