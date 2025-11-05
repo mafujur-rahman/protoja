@@ -2,22 +2,23 @@
 
 import { useEffect, useState, useRef } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import AnimatedButton from "../gsap/animated-button";
 import ChangingText from "../gsap/changing-text";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef(null);
-
-  const imageRef = useRef(null);
   const containerRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
+  // scroll + mouse tracking
   useEffect(() => {
     let ticking = false;
-
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -50,59 +51,66 @@ const HeroSection = () => {
     };
   }, []);
 
+  //Pin + expand from bottom-right
   useEffect(() => {
-    if (videoRef.current && isVideoLoaded) {
-      // Video scaling animation based on scroll
-      gsap.to(videoRef.current, {
-        scale: () => Math.min(1 + scrollY / 500, 1.5),
-        opacity: () => Math.min(0.7 + scrollY / 1000, 1),
-        duration: 0.5,
+    if (!isVideoLoaded) return;
+
+    const video = videoRef.current;
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: "+=800", // scroll length
+        scrub: true,
+        pin: video,
+        anticipatePin: 1,
+      },
+    }).fromTo(
+      video,
+      {
+        scaleX: 1,
+        scaleY: 1,
+        transformOrigin: "bottom right",
+      },
+      {
+        scaleX: 4.9, // expand width 
+        scaleY: 3.2, // expand height 
         ease: "power2.out",
-      });
-    }
-  }, [scrollY, isVideoLoaded]);
+      }
+    );
 
-  // Calculate video overlay opacity and color based on scroll and mouse position
+    return () => {
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, [isVideoLoaded]);
+
+  const handleVideoLoaded = () => setIsVideoLoaded(true);
+
+  // Overlay effects
   const overlayOpacity = Math.max(0.7 - scrollY / 1000, 0.4);
-
-  // Dynamic highlight color based on mouse position
   const highlightHue = Math.floor(mousePosition.x * 360);
   const highlightSaturation = 70 + Math.floor(mousePosition.y * 30);
   const highlightColor = `hsl(${highlightHue}, ${highlightSaturation}%, 60%)`;
 
-  const imageHeight = Math.min(200 + scrollY / 2, 700);
-  const imageWidth = Math.min(200 + scrollY / 2, 650);
-
-  const handleVideoLoaded = () => {
-    setIsVideoLoaded(true);
-  };
-
   return (
     <>
       <div ref={containerRef} className="relative min-h-screen bg-black">
-        {/* Background Video with dynamic highlight effect */}
+        {/* Background */}
         <div className="absolute inset-0 z-0">
           <img
             src="/assets/hero-banner-bg.svg"
             alt=""
             className="absolute w-full h-full object-cover"
           />
-
-          {/* Base overlay */}
-          <div
-            className="absolute inset-0 bg-black"
+          <div 
+            className="absolute inset-0 bg-black" 
             style={{ opacity: overlayOpacity }}
           ></div>
-
-          {/* Dynamic highlight overlay based on mouse position */}
           <div
             className="absolute inset-0 mix-blend-overlay pointer-events-none"
             style={{
-              background: `radial-gradient(circle at ${
-                mousePosition.x * 100
-              }% ${
-                mousePosition.y * 100
-              }%, ${highlightColor} 0%, transparent 50%)`,
+              background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, ${highlightColor} 0%, transparent 50%)`,
               opacity: 0.6,
             }}
           ></div>
@@ -124,8 +132,8 @@ const HeroSection = () => {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <rect width="46" height="46" rx="23" fill="white" />
-                    <g clip-path="url(#clip0_1597_17764)">
-                      <g clip-path="url(#clip1_1597_17764)">
+                    <g clipPath="url(#clip0_1597_17764)">
+                      <g clipPath="url(#clip1_1597_17764)">
                         <path
                           d="M23.9489 17.6992C25.2469 17.6992 26.4918 18.2149 27.4096 19.1327C28.3275 20.0505 28.8431 21.2954 28.8431 22.5934C28.8431 23.8915 28.3275 25.1363 27.4096 26.0542C26.4918 26.972 25.2469 27.4877 23.9489 27.4877C22.6509 27.4877 21.406 26.972 20.4882 26.0542C19.5703 25.1363 19.0547 23.8915 19.0547 22.5934C19.0547 21.2954 19.5703 20.0505 20.4882 19.1327C21.406 18.2149 22.6509 17.6992 23.9489 17.6992Z"
                           fill="#8A8A8A"
@@ -156,8 +164,8 @@ const HeroSection = () => {
                     </defs>
                   </svg>
 
-                  <img src="/assets/upworkIconHero.svg" alt="" />
-                  <img src="/assets/fiverIconHero.svg" alt="" />
+                  <img src="/assets/upworkIconHero.svg" alt="Upwork" />
+                  <img src="/assets/fiverIconHero.svg" alt="Fiverr" />
                 </div>
 
                 <div>
@@ -227,7 +235,7 @@ const HeroSection = () => {
                 {/* Main Headline */}
                 <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[90px] font-medium text-[#FAFAFA] leading-tight mb-6 md:mb-12">
                   Shape the future with bold{" "}
-                  <span className="inline-block ">
+                  <span className="inline-block">
                     <ChangingText
                       texts={[
                         "UI UX design",
@@ -252,55 +260,51 @@ const HeroSection = () => {
                   <AnimatedButton href={"/contact"} label={"schedule a call"} />
                 </div>
 
+                {/* Studio Description */}
                 <p className="text-gray-300 text-xl sm:text-sm md:text-xl max-w-md mt-12 sm:mt-16 md:mt-[100px]">
                   Protoja is a UI UX Design and Brand design studio, crafting
                   user-centered experiences and impactful brand identities to
                   drive business growth.
                 </p>
 
+                {/* Video */}
                 <video
-                  ref={imageRef}
+                  ref={videoRef}
                   src="/assets/design.mp4"
                   autoPlay
                   muted
                   loop
                   playsInline
-                  controls={false}
-                  className={`absolute rounded-xl right-8`}
+                  onLoadedData={handleVideoLoaded}
+                  className="absolute rounded-xl z-0"
                   style={{
-                    height: `${imageHeight}px`,
-                    width: `${imageWidth}px`,
-                    transformOrigin: "top right",
-                    bottom: `${Math.max(-scrollY / 1, -380)}px`,
-                    zIndex: -1,
-                    opacity: Math.min(1 + scrollY / 100, 1),
-                    transform: `scale(${Math.min(1 + scrollY / 200, 2.2)})`,
-                    transition: "opacity 0.5s ease, transform 0.5s ease",
-                    borderRadius: `0%`,
+                    width: 280,
+                    height: 200,
+                    bottom: 0,
+                    right: 25,
+                    transformOrigin: "bottom right",
                   }}
                 ></video>
               </div>
             </div>
           </div>
+
           {/* Bottom Section */}
           <div className="absolute bottom-6 sm:bottom-8 md:bottom-12 left-0 right-0 px-4 sm:px-6 md:px-10 lg:px-20">
             <div className="grid grid-cols-12 gap-4 md:gap-6 items-end">
               <div className="col-span-12 md:col-span-6 lg:col-span-5"></div>
-
               <div className="col-span-12 md:col-span-6 lg:col-span-7 flex justify-end">
                 <div className="relative w-full max-w-sm"></div>
               </div>
             </div>
           </div>
-          ;
         </div>
       </div>
 
-      <div className="relative w-full h-screen"></div>
+      {/* Extra scroll space */}
+      <div className="relative w-full h-[100vh] bg-black"></div>
     </>
   );
 };
 
 export default HeroSection;
-
-// Bottom section
