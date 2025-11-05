@@ -25,50 +25,78 @@ const ServiceStackScroll = () => {
     const cards = cardRefs.current.filter(Boolean);
     if (!cards.length) return;
 
-    gsap.set(cards, { y: "100%", scale: 1, transformOrigin: "center center" });
-    gsap.set(cards[0], { y: "0%" });
+    // Initial setup
+    gsap.set(cards, {
+      y: "100%",
+      scale: 1,
+      transformOrigin: "center center",
+      borderRadius: "16px"
+    });
+
+    // First card starts at top
+    gsap.set(cards[0], {
+      y: "0%",
+      scale: 1
+    });
+
     cards.forEach((c) => (c.style.willChange = "transform"));
+
+    const sectionHeight = window.innerHeight;
+    const totalDuration = (cards.length - 1) * sectionHeight;
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${cards.length * window.innerHeight}`,
+        end: `+=${totalDuration}`,
         scrub: true,
         pin: true,
         anticipatePin: 1,
       },
     });
 
+    // Create smooth stacking animations for all cards with equal spacing
     cards.forEach((card, i) => {
       if (i === 0) return;
-      const prev = cards[i - 1];
 
-      tl.to(
-        prev,
+      const startPosition = (i - 1) * (1 / (cards.length - 1));
+      const endPosition = i * (1 / (cards.length - 1));
+
+      // Animate the previous card to move up and scale down
+      tl.fromTo(cards[i - 1],
         {
-          scale: 0.53,
-          y: 80,
+          scale: 1,
+          y: 0,
+          borderRadius: "16px"
+        },
+        {
+          scale: 0.68,
+          y: 45,
           borderRadius: "38px",
           ease: "none",
+          duration: endPosition - startPosition
         },
-        i - 0.2
+        startPosition
       );
 
-      tl.to(
-        card,
+      // Animate the new card to come in
+      tl.fromTo(card,
         {
-          y: 0,
+          y: "100%",
+          scale: 1
+        },
+        {
+          y: "0%",
           scale: 1,
           ease: "none",
+          duration: endPosition - startPosition
         },
-        i - 0.2
+        startPosition
       );
     });
 
     return () => {
       ScrollTrigger.getAll().forEach((st) => st.kill());
-      tl.kill();
     };
   }, []);
 
