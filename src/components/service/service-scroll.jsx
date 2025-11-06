@@ -33,7 +33,7 @@ const ServiceStackScroll = () => {
       borderRadius: "16px"
     });
 
-    // First card starts at top
+    // First card  top
     gsap.set(cards[0], {
       y: "0%",
       scale: 1
@@ -55,14 +55,14 @@ const ServiceStackScroll = () => {
       },
     });
 
-    // Create smooth stacking animations for all cards with equal spacing
+    // Create smooth stacking animations 
     cards.forEach((card, i) => {
       if (i === 0) return;
 
       const startPosition = (i - 1) * (1 / (cards.length - 1));
       const endPosition = i * (1 / (cards.length - 1));
 
-      // Animate the previous card to move up and scale down
+      // previous card to move up and scale down
       tl.fromTo(cards[i - 1],
         {
           scale: 1,
@@ -79,7 +79,7 @@ const ServiceStackScroll = () => {
         startPosition
       );
 
-      // Animate the new card to come in
+      // new card to come in
       tl.fromTo(card,
         {
           y: "100%",
