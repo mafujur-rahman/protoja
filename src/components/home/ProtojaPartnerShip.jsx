@@ -3,6 +3,7 @@
 import * as React from "react";
 import PricingCards from "./PricingCard";
 import gsap from "gsap";
+import AnimatedText from "../gsap/animated-text-para";
 export default function ProtoJaPartnerShip() {
   const containerRef = React.useRef(null);
 
@@ -44,11 +45,21 @@ export default function ProtoJaPartnerShip() {
     <div className="bg-[FAFAFA] md:pt-20 max-w-[1440px] px-4 md:px-20 sm:px-6 mx-auto">
       <div className="md:flex justify-between">
         <div className="md:w-1/5">
-          <p className="md:text-2xl text-black">PROTOJA PARTNERSHIP</p>
+          <p className="md:text-2xl text-black">
+            <AnimatedText
+              text="PROTOJA PARTNERSHIP"
+              animation="topToBottom"
+              yOfyOffset={30}
+            />
+          </p>
           <div className="w-full border-t-2 border-[#CBCBCB] mt-4">
             <p className="md:text-xl text-black mt-4">
-              Reliable, scalable, and expert design support—whenever you need
-              it.
+              
+              <AnimatedText
+              text="Reliable, scalable, and expert design support—whenever you need it."
+              animation="fade"
+              stagger={0.05}
+              />
             </p>
           </div>
         </div>

@@ -151,12 +151,12 @@ const PricingCards = () => {
         ]}
       />
 
-      <div onMouseEnter={() => sethover(true)} onMouseLeave={() => sethover(false)} className="relative group rounded-3xl mt-4 pb-8 border overflow-hidden md:w-1/3 bg-[#F76F00] hover:bg-[#272727] hover:text-[#FAFAFA] text-black border-[#FFCA6D]">
+      <div onMouseEnter={() => sethover(true)} onMouseLeave={() => sethover(false)} className="relative group rounded-3xl mt-4 pb-8 border overflow-hidden md:w-1/3 bg-[#272727] hover:bg-[#F76F00] hover:text-black text-[#FAFAFA] border-[#FFCA6D]">
         <div className="p-8 pb-0">
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-2xl group-hover:text-[#FAFAFA]  font-medium">Elevate</h3>
-            <div className="px-3 py-1 rounded-full text-xs flex items-center gap-1 group-hover:bg-[#343434] bg-[#FFF2D3] group-hover:text-[#FAFAFA] text-[#F76F00]">
-              <span className="h-2 w-2 rounded-full  group-hover:bg-[#FAFAFA] bg-[#F76F00]"></span>
+            <h3 className="text-2xl group-hover:text-black text-[#FAFAFA] font-medium">Elevate</h3>
+            <div className="px-3 py-1 rounded-full text-xs flex items-center gap-1 group-hover:bg-[#FFF2D3] bg-[#FAFAFA] text-black group-hover:text-[#F76F00] ">
+              <span className="h-2 w-2 rounded-full  bg-black group-hover:bg-[#F76F00]  "></span>
               Limited availability
             </div>
           </div>
@@ -178,31 +178,31 @@ const PricingCards = () => {
           </div>
 
           <div className="mb-6">
-            <h4 className="text-md font-medium mb-4 group-hover:text-[#A1400C] text-[#FAFAFA]">
+            <h4 className="text-md font-medium mb-4 group-hover:text-[#FAFAFA] text-[#A1400C]">
               Team composition
             </h4>
             <ul className="space-y-2">
               <li className="flex items-center text-md">
-                <span className="h-3 w-3 rounded-full group-hover:bg-[#FAFAFA] bg-[#1E1E1E] mr-3"></span>
+                <span className="h-3 w-3 rounded-full group-hover:bg-[#1E1E1E] bg-[#FAFAFA] mr-3"></span>
                 2 Experienced Designers
               </li>
               <li className="flex items-center text-md">
-                <span className="h-3 w-3 rounded-full group-hover:bg-[#FAFAFA] bg-[#1E1E1E] mr-3"></span>
+                <span className="h-3 w-3 rounded-full group-hover:bg-[#1E1E1E] bg-[#FAFAFA] mr-3"></span>
                 Dedicated Project Manager
               </li>
               <li className="flex items-center text-md">
-                <span className="h-3 w-3 rounded-full group-hover:bg-[#FAFAFA] bg-[#1E1E1E] mr-3"></span>
+                <span className="h-3 w-3 rounded-full group-hover:bg-[#1E1E1E] bg-[#FAFAFA] mr-3"></span>
                 Shared Design Director
               </li>
               <li className="flex items-center text-md">
-                <span className="h-3 w-3 rounded-full group-hover:bg-[#FAFAFA] bg-[#1E1E1E] mr-3"></span>
+                <span className="h-3 w-3 rounded-full group-hover:bg-[#1E1E1E] bg-[#FAFAFA] mr-3"></span>
                 1 UI/UX Designer
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-md font-medium mb-4 group-hover:text-[#A1400C] text-[#FAFAFA]">
+            <h4 className="text-md font-medium mb-4 group-hover:text-[#FAFAFA] text-[#A1400C]">
               Team composition
             </h4>
             <ul className="space-y-2">
@@ -218,7 +218,7 @@ const PricingCards = () => {
                 "Pause or cancel anytime",
               ].map((item, index) => (
                 <li key={index} className="flex items-center text-md">
-                  <span className="h-3 w-3 rounded-full group-hover:bg-[#FAFAFA] bg-[#1E1E1E] mr-3"></span>
+                  <span className="h-3 w-3 rounded-full group-hover:bg-[#1E1E1E] bg-[#FAFAFA] mr-3"></span>
                   {item}
                 </li>
               ))}

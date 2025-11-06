@@ -61,18 +61,18 @@ const HoverButton = ({hover}) => {
     <div className="relative flex items-center">
       <div
         ref={leftArrowRef}
-        className="bg-orange-500 h-12 w-12 rounded-full flex items-center justify-center opacity-0 absolute left-[-44px] will-change-transform"
+        className={` ${hover ? "bg-[#1E1E1E]" : "bg-[#F76F00]"} h-12 w-12 rounded-full flex items-center justify-center absolute left-[-44px] z-20 will-change-transform`}
       >
         <svg
           ref={leftArrowSvg}
           width="24"
           height="24"
           viewBox="0 0 24 24"
-          fill={hover ? "#272727" : "#F76F00"}
+          fill={hover ? "#F76F00" : "#272727"}
         >
           <path
             d="M5 12H19M19 12L12 5M19 12L12 19"
-            stroke={hover ? "#272727" : "#F76F00"}
+            stroke={hover ? "#F76F00" : "#272727"}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -85,25 +85,25 @@ const HoverButton = ({hover}) => {
         onMouseLeave={handleMouseLeave}
         ref={scheduleRef}
         href={'/'}
-        className={`relative z-10 font-medium px-6 py-2.5 ${hover ? "bg-[#F76F00]" : "bg-[#1E1E1E]"} ${hover ? "text-[#272727]" : "text-[#F76F00]"}  rounded-full transition-colors text-xl will-change-transform`}
+        className={`relative z-10 font-medium px-6 py-2.5  ${hover ? "bg-[#1E1E1E]" : "bg-[#F76F00]"} ${hover ? "text-[#F76F00]" : "text-[#272727]"}  rounded-full transition-colors text-xl will-change-transform`}
       >
         Get started now
       </Link>
 
       <div
         ref={rightArrowRef}
-        className={` ${hover ? "bg-[#F76F00]" : "bg-[#1E1E1E]"} h-12 w-12 rounded-full flex items-center justify-center relative z-20 will-change-transform`}
+        className={` ${hover ? "bg-[#1E1E1E]" : "bg-[#F76F00]"} h-12 w-12 rounded-full flex items-center justify-center relative z-20 will-change-transform`}
       >
         <svg
           ref={rightArrowSvg}
           width="24"
           height="24"
           viewBox="0 0 24 24"
-          fill={hover ? "#272727" : "#F76F00"}
+          fill={hover ? "#F76F00" : "#272727"}
         >
           <path
             d="M19 12H5M5 12L12 5M5 12L12 19"
-            stroke={hover ? "#272727" : "#F76F00"}
+            stroke={hover ? "#F76F00" : "#272727"}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
