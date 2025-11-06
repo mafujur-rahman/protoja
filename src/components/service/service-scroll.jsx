@@ -47,7 +47,7 @@ const ServiceStackScroll = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        start: "top top",
+        start: "top 10%",
         end: `+=${totalDuration}`,
         scrub: true,
         pin: true,
@@ -103,7 +103,7 @@ const ServiceStackScroll = () => {
   const Card = ({ bg, title, desc, tags }, index) => (
     <div
       ref={(el) => (cardRefs.current[index] = el)}
-      className="stack-card absolute inset-0 rounded-2xl p-6 lg:p-14 shadow-2xl min-h-screen flex items-center justify-center"
+      className="stack-card absolute inset-0 rounded-2xl p-6 lg:p-14 shadow-2xl h-[90vh] flex items-center justify-center"
       style={{ backgroundColor: bg }}
     >
       <div className="flex flex-col lg:flex-row justify-between gap-4 lg:gap-8 w-full">
