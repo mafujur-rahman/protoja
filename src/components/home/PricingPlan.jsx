@@ -4,6 +4,7 @@ import * as React from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PricingPlanCard from "./PricingPlanCard";
+import AnimatedText from "../gsap/animated-text-para";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,11 +49,21 @@ export default function PricingPlan() {
     <div className="bg-[FAFAFA] p-20 max-w-[1440px] px-4 md:mx-20 sm:px-6 mx-auto">
       <div className="md:flex justify-between">
         <div className="md:w-1/5">
-          <p className="md:text-2xl text-4xl text-black">Our Pricing Plan</p>
+          <p className="md:text-2xl text-4xl text-black">
+            <AnimatedText
+              text="Our Pricing Plan"
+              animation="topToBottom"
+              yOffset={30}
+            />
+          </p>
           <div className="w-full border-t-2 border-[#CBCBCB] mt-4">
             <p className="md:text-xl text-black mt-4">
-              Flexible, transparent, and tailored to your needs—get the best
-              value with no hidden costs.
+
+              <AnimatedText
+                text="Flexible, transparent, and tailored to your needs—get the best value with no hidden costs."
+                animation="fade"
+                stagger={0.05}
+              />
             </p>
           </div>
         </div>

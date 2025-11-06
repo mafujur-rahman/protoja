@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import AnimatedButton from "../gsap/animated-button";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AnimatedText from "../gsap/animated-text-para";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -181,7 +182,12 @@ const BuildingBrands = () => {
       <div className="text-[#FAFAFA] md:mx-0 overflow-hidden">
         <div className="w-72">
           <div className="flex py-[10px] justify-between">
-            <p>Pro facts</p>
+            <AnimatedText
+              text="Pro facts"
+              animation="fillTopBottom"
+              stagger={0.05}
+            />
+
             <p>{`${currentSlide + 1} / ${slides.length}`}</p>
           </div>
           <p className="w-full h-[2px] bg-white"></p>

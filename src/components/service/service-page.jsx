@@ -21,16 +21,14 @@ const ServicePage = () => {
           <div className="text-[#CBCBCB] text-[18px]">
 
             <AnimatedText
-              text="We deliver transformative digital journeys for renowned global
-            brands by combining creativity, AI innovation, and modern
-            technology."
+              text="We deliver transformative digital journeys for renowned global brands by combining creativity, AI innovation, and modern technology."
               animation="fade"
               stagger={0.05}
             />
 
           </div>
         </div>
-        <div className="text-[#FAFAFA] font-semibold mb-10 lg:mb-0 leading-tight md:text-[72px]">
+        <div className="text-[#FAFAFA] font-semibold mb-10 lg:mb-0 leading-[1] md:text-[72px]">
           <AnimatedText
             text="Our award winning digital services"
             animation="topToBottom"

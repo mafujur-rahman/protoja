@@ -1,7 +1,11 @@
 'use client'
 import { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { MdArrowOutward } from 'react-icons/md';
+import AnimatedText from '../gsap/animated-text-para';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const servicesData = [
     {
@@ -38,36 +42,61 @@ const servicesData = [
 
 const ServiceItem = ({ service, index, activeId, setActiveId }) => {
     const containerRef = useRef(null);
-    const imageRef = useRef(null);
-    const listRef = useRef(null);
+    const contentRef = useRef(null); 
     const isActive = activeId === service.id;
 
     const handleMouseEnter = () => setActiveId(service.id);
     const handleMouseLeave = () => setActiveId(null);
 
+    // Scroll-trigger animation
     useEffect(() => {
-        if (!containerRef.current || !imageRef.current || !listRef.current) return;
+        if (!containerRef.current) return;
+        gsap.fromTo(
+            containerRef.current,
+            { y: 50, opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: 'top 90%',
+                    toggleActions: 'play none none none',
+                },
+                delay: index * 0.1, 
+            }
+        );
+    }, []);
+
+    // Hover animation
+    useEffect(() => {
+        if (!containerRef.current || !contentRef.current) return;
 
         if (isActive) {
-            // Background color change
+            // Show wrapper container immediately
+            gsap.set(contentRef.current, { display: 'flex' });
+
+            // Animate wrapper (image + list) 
+            gsap.fromTo(
+                contentRef.current,
+                { y: -20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.3, ease: 'power3.out' }
+            );
+
+            // Background color
             gsap.to(containerRef.current, { backgroundColor: '#000000', duration: 0.3 });
-
-            // image
-            gsap.set(imageRef.current, { display: 'flex' });
-            gsap.fromTo(imageRef.current, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power3.out' });
-
-            // feature list
-            gsap.set(listRef.current, { display: 'flex' });
-            gsap.fromTo(listRef.current, {y:30, opacity: 0 }, { y:0, opacity: 1, duration: 0.9, ease: 'power3.out' });
         } else {
-            // Reset background color
+            // Hide wrapper
+            gsap.to(contentRef.current, {
+                y: -20,
+                opacity: 0,
+                duration: 0.2,
+                onComplete: () => gsap.set(contentRef.current, { display: 'none' }),
+            });
+
+            // Reset background
             gsap.to(containerRef.current, { backgroundColor: '#1e1e1e', duration: 0.3 });
-
-            // Hide image
-            gsap.to(imageRef.current, { y: 30, opacity: 0, duration: 0.3, onComplete: () => gsap.set(imageRef.current, { display: 'none' }) });
-
-            // Hide feature list
-            gsap.to(listRef.current, { opacity: 0, duration: 0.3, onComplete: () => gsap.set(listRef.current, { display: 'none' }) });
         }
     }, [isActive]);
 
@@ -89,21 +118,28 @@ const ServiceItem = ({ service, index, activeId, setActiveId }) => {
                 </h4>
             </div>
 
-            {/* Image */}
-            <div ref={imageRef} className="w-1/4 flex justify-center items-center transition-all duration-500" style={{ opacity: 0, display: 'none' }}>
-                <div className="w-full h-full max-w-[280px] max-h-[120px] rounded-lg flex items-center justify-center shadow-xl overflow-hidden">
-                    <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
-                </div>
-            </div>
-
-            {/* Feature list */}
-            <div ref={listRef} className="w-1/4 flex flex-col justify-center space-y-2 text-sm text-gray-200" style={{ opacity: 0, display: 'none' }}>
-                {service.features.map((feature, i) => (
-                    <div key={i} className="flex items-start">
-                        <span className="text-orange-500 text-2xl leading-none mr-2 mt-[-3px] font-bold">&bull;</span>
-                        {feature}
+            {/* Wrapper for Image + Feature List */}
+            <div
+                ref={contentRef}
+                className="flex w-1/2 items-center justify-between gap-20 opacity-0"
+                style={{ display: 'none' }}
+            >
+                {/* Image */}
+                <div className="w-1/2 flex justify-center items-center">
+                    <div className="w-full h-full max-w-[280px] max-h-[120px] rounded-lg flex items-center justify-center shadow-xl overflow-hidden">
+                        <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
                     </div>
-                ))}
+                </div>
+
+                {/* Feature list */}
+                <div className="w-1/2 flex flex-col justify-center space-y-2 text-sm text-gray-200">
+                    {service.features.map((feature, i) => (
+                        <div key={i} className="flex items-start">
+                            <span className="text-orange-500 text-2xl leading-none mr-2 mt-[-3px] font-bold">&bull;</span>
+                            {feature}
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Icon */}
@@ -111,7 +147,6 @@ const ServiceItem = ({ service, index, activeId, setActiveId }) => {
                 <MdArrowOutward />
             </div>
         </div>
-
     );
 };
 
@@ -123,11 +158,17 @@ const NewServices = () => {
             <div className="max-w-screen-xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 pb-12">
                     <div>
-                        <h3 className="text-white text-xl font-semibold tracking-wider uppercase mb-3">Services</h3>
-                        <p className="text-gray-400 text-lg max-w-sm">{servicesData[0].features.join(', ')}</p>
+                        <h3 className="text-white text-xl font-semibold tracking-wider uppercase mb-3">
+                            <AnimatedText text="Service" animation='fade' stagger={0.05} />
+                        </h3>
+                        <p className="text-gray-400 text-lg max-w-sm">
+                            <AnimatedText text="Market Analysis, Feature Prioritization, Growth Planning, Long-term Strategy" animation='fade' stagger={0.05} />
+                        </p>
                     </div>
                     <div className="flex items-end justify-start md:justify-end">
-                        <h2 className="text-5xl lg:text-6xl font-bold leading-tight text-white">Our award winning digital services</h2>
+                        <h2 className="text-5xl lg:text-6xl font-bold leading-tight text-white">
+                            <AnimatedText text="Our award winning digital services" animation="topToBottom" yOffset={30} />
+                        </h2>
                     </div>
                 </div>
 
